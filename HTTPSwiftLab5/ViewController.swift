@@ -280,17 +280,20 @@ extension ViewController {
             self.calibrationStage = .ooo
             setDelayedWaitingToTrue(1.0) // wait briefly before starting the recording
             startAudioRecording(for: "ooo")  // Start recording for 'ooo'
-
+            break
+            
         case .ooo:
             // After 2 seconds of recording for 'ooo', move to 'aaa'
             self.calibrationStage = .aaa
             setDelayedWaitingToTrue(1.0)
             startAudioRecording(for: "aaa") // Start recording for 'aaa'
+            break
 
         case .aaa:
             // After 2 seconds of recording for 'aaa', finish calibration
             self.calibrationStage = .notCalibrating
             setDelayedWaitingToTrue(1.0)  // Delay before switching UI back
+            break
         }
     }
     
@@ -328,11 +331,10 @@ extension ViewController {
             
             // send data to server
             client.sendData(self.ringBuffer.getDataAsVector(), withLabel: label)
-            
-        //if u uncomment this, it runs on the 2 second timer but it just switches back and forth constantly btwn the 2, cant get it to stop
-        //right now, have to manually click calibrate once to switch from oo to aaa
            
-            //nextCalibrationStage()
+        if self.calibrationStage != .notCalibrating {  //ok fixed this, will calibrate oo once and aa once for each time u click "calibrate once"
+                nextCalibrationStage()
+            }
         }
     
     
