@@ -13,6 +13,8 @@
 
 
 import UIKit
+import Metal
+import Accelerate
 import CoreMotion
 
 class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
@@ -39,11 +41,27 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     // User Interface properties
     let animation = CATransition()
     @IBOutlet weak var dsidLabel: UILabel!
-    @IBOutlet weak var upArrow: UILabel!
+    @IBOutlet weak var oooLabel: UILabel!
     @IBOutlet weak var rightArrow: UILabel!
-    @IBOutlet weak var downArrow: UILabel!
+    @IBOutlet weak var aaaLabel: UILabel!
     @IBOutlet weak var leftArrow: UILabel!
     @IBOutlet weak var largeMotionMagnitude: UIProgressView!
+    
+    //Sound variables
+    @IBOutlet weak var freq1: UILabel!
+    @IBOutlet weak var freq2: UILabel!
+    @IBOutlet weak var userView: UIView!
+    var cur_hz_1: Double = 0.0
+    var cur_hz_2: Double = 0.0
+        
+    struct AudioConstants {
+        static let AUDIO_BUFFER_SIZE = 1024 * 4
+    }
+    
+    let audio = AudioModel(buffer_size: AudioConstants.AUDIO_BUFFER_SIZE)
+    lazy var graph: MetalGraph? = {
+        return MetalGraph(userView: self.userView)
+    }()
     
     // MARK: Class Properties with Observers
     enum CalibrationStage:String {
@@ -73,6 +91,30 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //sound graph setup
+        var run_counter = 0
+        // graph and audio processing (taken from original push, just moved to modules)
+        setupGraph()
+        audio.startMicrophoneProcessing(withFps: 20)
+        audio.play()
+
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
+            self.updateGraph()
+        }
+        Timer.scheduledTimer(withTimeInterval: 0.10, repeats: true) { _ in
+            if(self.audio.timeData[0] > 0.037){
+                self.updateLabels()
+                run_counter = 0
+            } else if run_counter > 40{
+                if let label1 = self.freq1, let label2 = self.freq2 {
+                    label1.text = "Noise"
+                    label2.text = "Noise"
+                }
+            } else {
+                run_counter = run_counter+1
+            }
+        }
+        
         // create reusable animation
         animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         animation.type = CATransitionType.fade
@@ -231,10 +273,10 @@ extension ViewController {
     func displayLabelResponse(_ response:String){
         switch response {
         case "['ooo']","ooo":
-            blinkLabel(upArrow)
+            blinkLabel(oooLabel)
             break
         case "['aaa']","aaa":
-            blinkLabel(downArrow)
+            blinkLabel(aaaLabel)
             break
         default:
             print("Unknown")
@@ -247,28 +289,22 @@ extension ViewController {
         case .ooo:
             self.isCalibrating = true
             DispatchQueue.main.async{
-                self.setAsCalibrating(self.upArrow)
-                self.setAsNormal(self.rightArrow)
-                self.setAsNormal(self.leftArrow)
-                self.setAsNormal(self.downArrow)
+                self.setAsCalibrating(self.oooLabel)
+                self.setAsNormal(self.aaaLabel)
             }
             break
         case .aaa:
             self.isCalibrating = true
             DispatchQueue.main.async{
-                self.setAsNormal(self.upArrow)
-                self.setAsNormal(self.rightArrow)
-                self.setAsNormal(self.leftArrow)
-                self.setAsCalibrating(self.downArrow)
+                self.setAsNormal(self.oooLabel)
+                self.setAsCalibrating(self.aaaLabel)
             }
             break
         case .notCalibrating:
             self.isCalibrating = false
             DispatchQueue.main.async{
-                self.setAsNormal(self.upArrow)
-                self.setAsNormal(self.rightArrow)
-                self.setAsNormal(self.leftArrow)
-                self.setAsNormal(self.downArrow)
+                self.setAsNormal(self.oooLabel)
+                self.setAsNormal(self.aaaLabel)
             }
             break
         }
@@ -295,5 +331,91 @@ extension ViewController {
     }
     
     
+}
+
+
+//MARK: Audio Input Functions
+extension ViewController {
+    func setupGraph() {
+            if let graph = self.graph {
+                graph.setBackgroundColor(r: 0, g: 0, b: 0, a: 1)
+                graph.addGraph(withName: "fft",
+                               shouldNormalizeForFFT: true,
+                               numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE / 2)
+                graph.addGraph(withName: "time",
+                               numPointsInGraph: AudioConstants.AUDIO_BUFFER_SIZE)
+                graph.makeGrids()
+            }
+        }
+
+        func updateGraph() {
+            if let graph = self.graph {
+                graph.updateGraph(data: audio.fftData, forKey: "fft")
+                graph.updateGraph(data: audio.timeData, forKey: "time")
+            }
+        }
+        
+        func updateLabels() {
+            if let label1 = self.freq1, let label2 = self.freq2 {
+                self.calcTone(audio_data: audio.fftData)
+                var output_label_1 = String(Int(cur_hz_1))
+                label1.text = output_label_1 + " Hz"
+                var output_label_2 = String(Int(cur_hz_2))
+                label2.text = output_label_2 + " Hz"
+            }
+        }
+
+        override func viewDidDisappear(_ animated: Bool) {
+            super.viewDidDisappear(animated)
+            audio.pause()
+        }
+        
+        func calcTone(audio_data: [Float]) {
+            var data: [Float] = audio_data
+            var window: [Float] = []
+            var max_list: [Int: Int] = [:]
+            var max_list_val: [Int: Float] = [:]
+            var hz_per_index = 44100.0/Double(AudioConstants.AUDIO_BUFFER_SIZE)
+            
+            for i in 1...(data.count-5) {
+                window = Array(data[(i)...(i)+4])
+
+                if let win_max = window.max(){
+                    if let win_index = data.firstIndex(of: win_max){
+                        
+                        if let _ = max_list[win_index]{
+                            max_list[win_index] = max_list[win_index]!+1
+                            max_list_val[win_index] = win_max
+                        }else {
+                            max_list[win_index] = 1
+                            max_list_val[win_index] = win_max
+                        }
+                    }
+                }
+            }
+            
+            //populates all possible peaks
+            var possible_peaks: [Int: Float] = [:]
+            for item in max_list{
+                if item.value >= 5{
+                    possible_peaks[item.key] = max_list_val[item.key]
+                }
+            }
+            
+            // Get first highest frequency from dict
+            if let (key, _) = possible_peaks.max(by: { $0.value < $1.value }){
+                cur_hz_1 = Double(key)*hz_per_index
+                possible_peaks.removeValue(forKey: key)
+            } else {
+                cur_hz_1 = Double(0.0)
+            }
+                    
+            // Get second highest frequency from dict
+            if let (key, _) = possible_peaks.max(by: {  $0.value < $1.value }){
+                cur_hz_2 = Double(key)*hz_per_index
+            } else {
+                cur_hz_2 = Double(0.0)
+            }
+        }
 }
 

@@ -346,6 +346,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 7SS3BK2SRA;
 				INFOPLIST_FILE = HTTPSwiftLab5/Info.plist;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This App requires microphone access.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -364,6 +365,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 7SS3BK2SRA;
 				INFOPLIST_FILE = HTTPSwiftLab5/Info.plist;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This App requires microphone access.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
