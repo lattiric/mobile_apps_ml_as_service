@@ -390,19 +390,29 @@ async def predict_datapoint_sklearn(datapoint: FeatureDataPoint = Body(...)):
     Post a feature set and get the label back
 
     """
+    # # place inside an SFrame (that has one row)
+    # data = np.array(datapoint.feature).reshape((1,-1))
 
-    # place inside an SFrame (that has one row)
+    # if(app.clf[datapoint.dsid] == []):
+    #     print("Loading Sklearn Model From file")
+    #     tmp = load('../models/sklearn_model_dsid%d.joblib'%(dsid)) 
+    #     app.clf[datapoint.dsid] = pickle.loads(tmp['model'])
+
+    #     # TODO: what happens if the user asks for a model that was never trained?
+    #     #       or if the user asks for a dsid without any data? 
+    #     #       need a graceful failure for the client...
+
+
+    # pred_label = app.clf[datapoint.dsid].predict(data)
+    # return {"prediction":str(pred_label)}
+
     data = np.array(datapoint.feature).reshape((1,-1))
 
-    if(app.clf[datapoint.dsid] == []):
-        print("Loading Sklearn Model From file")
-        tmp = load('../models/sklearn_model_dsid%d.joblib'%(dsid)) 
-        app.clf[datapoint.dsid] = pickle.loads(tmp['model'])
-
-        # TODO: what happens if the user asks for a model that was never trained?
-        #       or if the user asks for a dsid without any data? 
-        #       need a graceful failure for the client...
-
+    if(app.clf.get(datapoint.dsid) is not None):
+        pass
+    else:
+        print("Loading SKLearn Model From file")
+        raise HTTPException(status_code=500, detail=f"DSID {datapoint.dsid} has no model trained.")
 
     pred_label = app.clf[datapoint.dsid].predict(data)
     return {"prediction":str(pred_label)}

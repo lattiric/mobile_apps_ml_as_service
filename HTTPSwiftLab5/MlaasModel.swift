@@ -110,7 +110,7 @@ class MlaasModel: NSObject, URLSessionDelegate{
     
     // post data without a label
     func sendData(_ array:[Double]){
-        let baseURL = "http://\(server_ip):8000/predict_turi/"
+        let baseURL = "http://\(server_ip):8000/predict_sklearn/"
         let postUrl = URL(string: "\(baseURL)")
         
         // create a custom HTTP POST request
@@ -192,7 +192,7 @@ class MlaasModel: NSObject, URLSessionDelegate{
     }
     
     func trainModel(){
-        let baseURL = "http://\(server_ip):8000/train_model_turi/\(dsid)"
+        let baseURL = "http://\(server_ip):8000/train_model_sklearn/\(dsid)"
         let postUrl = URL(string: "\(baseURL)")
         
         // create a custom HTTP POST request
