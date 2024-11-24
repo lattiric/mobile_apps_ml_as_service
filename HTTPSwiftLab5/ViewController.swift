@@ -48,10 +48,8 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     // MARK: Class Properties with Observers
     enum CalibrationStage:String {
         case notCalibrating = "notCalibrating"
-        case up = "up"
-        case right = "right"
-        case down = "down"
-        case left = "left"
+        case ooo = "ooo"
+        case aaa = "aaa"
     }
     
     var calibrationStage:CalibrationStage = .notCalibrating {
@@ -232,17 +230,11 @@ extension ViewController {
     
     func displayLabelResponse(_ response:String){
         switch response {
-        case "['up']","up":
+        case "['ooo']","ooo":
             blinkLabel(upArrow)
             break
-        case "['down']","down":
+        case "['aaa']","aaa":
             blinkLabel(downArrow)
-            break
-        case "['left']","left":
-            blinkLabel(leftArrow)
-            break
-        case "['right']","right":
-            blinkLabel(rightArrow)
             break
         default:
             print("Unknown")
@@ -252,7 +244,7 @@ extension ViewController {
     
     func setInterfaceForCalibrationStage(){
         switch calibrationStage {
-        case .up:
+        case .ooo:
             self.isCalibrating = true
             DispatchQueue.main.async{
                 self.setAsCalibrating(self.upArrow)
@@ -261,32 +253,13 @@ extension ViewController {
                 self.setAsNormal(self.downArrow)
             }
             break
-        case .left:
-            self.isCalibrating = true
-            DispatchQueue.main.async{
-                self.setAsNormal(self.upArrow)
-                self.setAsNormal(self.rightArrow)
-                self.setAsCalibrating(self.leftArrow)
-                self.setAsNormal(self.downArrow)
-            }
-            break
-        case .down:
+        case .aaa:
             self.isCalibrating = true
             DispatchQueue.main.async{
                 self.setAsNormal(self.upArrow)
                 self.setAsNormal(self.rightArrow)
                 self.setAsNormal(self.leftArrow)
                 self.setAsCalibrating(self.downArrow)
-            }
-            break
-            
-        case .right:
-            self.isCalibrating = true
-            DispatchQueue.main.async{
-                self.setAsNormal(self.upArrow)
-                self.setAsCalibrating(self.rightArrow)
-                self.setAsNormal(self.leftArrow)
-                self.setAsNormal(self.downArrow)
             }
             break
         case .notCalibrating:
@@ -305,27 +278,16 @@ extension ViewController {
         switch self.calibrationStage {
         case .notCalibrating:
             //start with up arrow
-            self.calibrationStage = .up
+            self.calibrationStage = .ooo
             setDelayedWaitingToTrue(1.0)
             break
-        case .up:
+        case .ooo:
             //go to right arrow
-            self.calibrationStage = .right
+            self.calibrationStage = .aaa
             setDelayedWaitingToTrue(1.0)
             break
-        case .right:
+        case .aaa:
             //go to down arrow
-            self.calibrationStage = .down
-            setDelayedWaitingToTrue(1.0)
-            break
-        case .down:
-            //go to left arrow
-            self.calibrationStage = .left
-            setDelayedWaitingToTrue(1.0)
-            break
-            
-        case .left:
-            //end calibration
             self.calibrationStage = .notCalibrating
             setDelayedWaitingToTrue(1.0)
             break

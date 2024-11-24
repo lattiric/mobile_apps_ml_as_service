@@ -38,6 +38,7 @@
 		58D2690F2CF2C26C007DEA02 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		58D269102CF2C26C007DEA02 /* TempClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TempClass.h; sourceTree = "<group>"; };
 		58D269112CF2C26C007DEA02 /* TempClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TempClass.m; sourceTree = "<group>"; };
+		58D2691A2CF2E397007DEA02 /* mobile_apps_audio_filtering_proj-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mobile_apps_audio_filtering_proj-Bridging-Header.h"; sourceTree = "<group>"; };
 		B6022E662C108DB400E2CC70 /* MlaasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MlaasModel.swift; sourceTree = "<group>"; };
 		B67483D51ACA2D6800A9970E /* HTTPSwiftLab5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HTTPSwiftLab5.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67483D91ACA2D6800A9970E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,6 +103,7 @@
 				B67483DC1ACA2D6800A9970E /* ViewController.swift */,
 				58D269042CF2C251007DEA02 /* AudioModel.swift */,
 				B6022E662C108DB400E2CC70 /* MlaasModel.swift */,
+				58D2691A2CF2E397007DEA02 /* mobile_apps_audio_filtering_proj-Bridging-Header.h */,
 				B694B0191FA377E4009A4277 /* RingBuffer.swift */,
 				58D269122CF2C26C007DEA02 /* Utilities */,
 				B67483DE1ACA2D6800A9970E /* Main.storyboard */,
@@ -351,6 +353,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "SMU.--PRODUCT-NAME-rfc1034identifier--2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "HTTPSwiftLab5/mobile_apps_audio_filtering_proj-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -368,6 +371,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "SMU.--PRODUCT-NAME-rfc1034identifier--2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "HTTPSwiftLab5/mobile_apps_audio_filtering_proj-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
