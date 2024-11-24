@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		58D269052CF2C251007DEA02 /* AudioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D269042CF2C251007DEA02 /* AudioModel.swift */; };
+		58D269132CF2C26C007DEA02 /* AudioFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D269072CF2C26C007DEA02 /* AudioFileReader.m */; };
+		58D269142CF2C26C007DEA02 /* MetalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D2690C2CF2C26C007DEA02 /* MetalGraph.swift */; };
+		58D269152CF2C26C007DEA02 /* Novocaine.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D2690E2CF2C26C007DEA02 /* Novocaine.m */; };
+		58D269162CF2C26C007DEA02 /* CircularBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D269092CF2C26C007DEA02 /* CircularBuffer.m */; };
+		58D269172CF2C26C007DEA02 /* TempClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D269112CF2C26C007DEA02 /* TempClass.m */; };
+		58D269182CF2C26C007DEA02 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 58D2690F2CF2C26C007DEA02 /* Shaders.metal */; };
+		58D269192CF2C26C007DEA02 /* FFTHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D2690B2CF2C26C007DEA02 /* FFTHelper.m */; };
 		B6022E672C108DB400E2CC70 /* MlaasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6022E662C108DB400E2CC70 /* MlaasModel.swift */; };
 		B67483DB1ACA2D6800A9970E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67483DA1ACA2D6800A9970E /* AppDelegate.swift */; };
 		B67483DD1ACA2D6800A9970E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67483DC1ACA2D6800A9970E /* ViewController.swift */; };
@@ -17,6 +25,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		58D269042CF2C251007DEA02 /* AudioModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioModel.swift; sourceTree = "<group>"; };
+		58D269062CF2C26C007DEA02 /* AudioFileReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioFileReader.h; sourceTree = "<group>"; };
+		58D269072CF2C26C007DEA02 /* AudioFileReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioFileReader.m; sourceTree = "<group>"; };
+		58D269082CF2C26C007DEA02 /* CircularBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircularBuffer.h; sourceTree = "<group>"; };
+		58D269092CF2C26C007DEA02 /* CircularBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircularBuffer.m; sourceTree = "<group>"; };
+		58D2690A2CF2C26C007DEA02 /* FFTHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFTHelper.h; sourceTree = "<group>"; };
+		58D2690B2CF2C26C007DEA02 /* FFTHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FFTHelper.m; sourceTree = "<group>"; };
+		58D2690C2CF2C26C007DEA02 /* MetalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalGraph.swift; sourceTree = "<group>"; };
+		58D2690D2CF2C26C007DEA02 /* Novocaine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Novocaine.h; sourceTree = "<group>"; };
+		58D2690E2CF2C26C007DEA02 /* Novocaine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Novocaine.m; sourceTree = "<group>"; };
+		58D2690F2CF2C26C007DEA02 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		58D269102CF2C26C007DEA02 /* TempClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TempClass.h; sourceTree = "<group>"; };
+		58D269112CF2C26C007DEA02 /* TempClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TempClass.m; sourceTree = "<group>"; };
 		B6022E662C108DB400E2CC70 /* MlaasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MlaasModel.swift; sourceTree = "<group>"; };
 		B67483D51ACA2D6800A9970E /* HTTPSwiftLab5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HTTPSwiftLab5.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67483D91ACA2D6800A9970E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -39,6 +60,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		58D269122CF2C26C007DEA02 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				58D269062CF2C26C007DEA02 /* AudioFileReader.h */,
+				58D269072CF2C26C007DEA02 /* AudioFileReader.m */,
+				58D269082CF2C26C007DEA02 /* CircularBuffer.h */,
+				58D269092CF2C26C007DEA02 /* CircularBuffer.m */,
+				58D2690A2CF2C26C007DEA02 /* FFTHelper.h */,
+				58D2690B2CF2C26C007DEA02 /* FFTHelper.m */,
+				58D2690C2CF2C26C007DEA02 /* MetalGraph.swift */,
+				58D2690D2CF2C26C007DEA02 /* Novocaine.h */,
+				58D2690E2CF2C26C007DEA02 /* Novocaine.m */,
+				58D2690F2CF2C26C007DEA02 /* Shaders.metal */,
+				58D269102CF2C26C007DEA02 /* TempClass.h */,
+				58D269112CF2C26C007DEA02 /* TempClass.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		B67483CC1ACA2D6800A9970E = {
 			isa = PBXGroup;
 			children = (
@@ -60,8 +100,10 @@
 			children = (
 				B67483DA1ACA2D6800A9970E /* AppDelegate.swift */,
 				B67483DC1ACA2D6800A9970E /* ViewController.swift */,
+				58D269042CF2C251007DEA02 /* AudioModel.swift */,
 				B6022E662C108DB400E2CC70 /* MlaasModel.swift */,
 				B694B0191FA377E4009A4277 /* RingBuffer.swift */,
+				58D269122CF2C26C007DEA02 /* Utilities */,
 				B67483DE1ACA2D6800A9970E /* Main.storyboard */,
 				B67483E11ACA2D6800A9970E /* Images.xcassets */,
 				B67483E31ACA2D6800A9970E /* LaunchScreen.xib */,
@@ -152,9 +194,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				B67483DD1ACA2D6800A9970E /* ViewController.swift in Sources */,
+				58D269132CF2C26C007DEA02 /* AudioFileReader.m in Sources */,
+				58D269142CF2C26C007DEA02 /* MetalGraph.swift in Sources */,
+				58D269152CF2C26C007DEA02 /* Novocaine.m in Sources */,
+				58D269162CF2C26C007DEA02 /* CircularBuffer.m in Sources */,
+				58D269172CF2C26C007DEA02 /* TempClass.m in Sources */,
+				58D269182CF2C26C007DEA02 /* Shaders.metal in Sources */,
+				58D269192CF2C26C007DEA02 /* FFTHelper.m in Sources */,
 				B67483DB1ACA2D6800A9970E /* AppDelegate.swift in Sources */,
 				B6022E672C108DB400E2CC70 /* MlaasModel.swift in Sources */,
 				B694B01A1FA377E4009A4277 /* RingBuffer.swift in Sources */,
+				58D269052CF2C251007DEA02 /* AudioModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
