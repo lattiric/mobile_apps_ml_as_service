@@ -330,7 +330,10 @@ extension ViewController {
             print("Peak 2: \(cur_hz_2) Hz")
             
             // send data to server
-            client.sendData([cur_hz_1, cur_hz_2], withLabel: label)
+            //client.sendData([cur_hz_1, cur_hz_2], withLabel: label)
+            ringBuffer.addNewData(peak1Data: cur_hz_1, peak2Data: cur_hz_2)
+            let dataVector = ringBuffer.getDataAsVector()
+            client.sendData(dataVector, withLabel: label)
            
         if self.calibrationStage != .notCalibrating {  //ok fixed this, will calibrate oo once and aa once for each time u click "calibrate once"
                 nextCalibrationStage()
