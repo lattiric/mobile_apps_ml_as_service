@@ -277,59 +277,44 @@ extension ViewController {
     func nextCalibrationStage() {
         switch self.calibrationStage {
         case .notCalibrating:
-            // start with 'ooo' calibration
             self.calibrationStage = .ooo
             setDelayedWaitingToTrue(1.0) // wait briefly before starting the recording
             startAudioRecording(for: "ooo")  // Start recording for 'ooo'
-            
+
         case .ooo:
-            // After 2 seconds of recording for 'ooo', switch to 'aaa'
-            DispatchQueue.main.asyncAfter(deadline: .now() + calibrationDuration) {
-                // Stop the audio recording and process peaks
-                self.analyzeAudioPeaks(for: "ooo")
-                
-                // Move to 'aaa' stage
-                self.calibrationStage = .aaa
-                self.setDelayedWaitingToTrue(1.0)
-                self.startAudioRecording(for: "aaa") // Start recording for 'aaa'
-            }
+            // After 2 seconds of recording for 'ooo', move to 'aaa'
+            self.calibrationStage = .aaa
+            setDelayedWaitingToTrue(1.0)
+            startAudioRecording(for: "aaa") // Start recording for 'aaa'
 
         case .aaa:
-            // After 2 seconds of recording for 'aaa', save the peaks and finish calibration
-            DispatchQueue.main.asyncAfter(deadline: .now() + calibrationDuration) {
-                // Stop the audio recording and process peaks
-                self.analyzeAudioPeaks(for: "aaa")
-                
-                // Finish calibration and move to 'notCalibrating' state
-                self.calibrationStage = .notCalibrating
-                self.setDelayedWaitingToTrue(1.0)  // Delay before switching UI back
-            }
+            // After 2 seconds of recording for 'aaa', finish calibration
+            self.calibrationStage = .notCalibrating
+            setDelayedWaitingToTrue(1.0)  // Delay before switching UI back
         }
     }
     
-    
         // MARK: - Audio Recording and Peak Calculation
         func startAudioRecording(for label: String) {
-            // Reset the audio model's data
             audio.startMicrophoneProcessing(withFps: 20)
             
-            // Record audio for the set duration
-            calibrationTimer?.invalidate()  // Invalidate any existing timer
+            calibrationTimer?.invalidate()  // get rid of any existing timer
                 calibrationTimer = Timer.scheduledTimer(withTimeInterval: calibrationDuration, repeats: false) { _ in
-                    // After the recording duration, stop the audio processing
+                   
+                    //this will go for 2 seconds or whatever we say and then stop, get the 2 highest peaks, and send them to searver
+                    
                     self.audio.stopMicrophoneProcessing()
-                    // Analyze the peaks in the FFT data
                     self.analyzeAudioPeaks(for: label)
             }
             
-            //for blinking?
-            if label == "ooo" {
-                    self.setAsCalibrating(self.oooLabel)
-                    self.setAsNormal(self.aaaLabel)
-                } else {
-                    self.setAsCalibrating(self.aaaLabel)
-                    self.setAsNormal(self.oooLabel)
-                }
+//            //for blinking?
+//            if label == "ooo" {
+//                    self.setAsCalibrating(self.oooLabel)
+//                    self.setAsNormal(self.aaaLabel)
+//                } else {
+//                    self.setAsCalibrating(self.aaaLabel)
+//                    self.setAsNormal(self.oooLabel)
+//                }
         }
     
     func analyzeAudioPeaks(for label: String) {
