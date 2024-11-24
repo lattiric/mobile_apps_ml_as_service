@@ -25,12 +25,12 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     let client = MlaasModel() // how we will interact with the server
     
     // operation queues
-    let motionOperationQueue = OperationQueue()
-    let calibrationOperationQueue = OperationQueue()
-    
-    // motion data properties
+//    let motionOperationQueue = OperationQueue()
+//    let calibrationOperationQueue = OperationQueue()
+//    
+//    // motion data properties
     var ringBuffer = RingBuffer()
-    let motion = CMMotionManager()
+//    let motion = CMMotionManager()
     var magThreshold = 0.1
     var ipUrlAdress = "none"
     
@@ -42,9 +42,9 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     let animation = CATransition()
     @IBOutlet weak var dsidLabel: UILabel!
     @IBOutlet weak var oooLabel: UILabel!
-    @IBOutlet weak var rightArrow: UILabel!
+    //@IBOutlet weak var rightArrow: UILabel!
     @IBOutlet weak var aaaLabel: UILabel!
-    @IBOutlet weak var leftArrow: UILabel!
+    //@IBOutlet weak var leftArrow: UILabel!
     @IBOutlet weak var largeMotionMagnitude: UIProgressView!
     
     //Sound variables
@@ -53,6 +53,10 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     @IBOutlet weak var userView: UIView!
     var cur_hz_1: Double = 0.0
     var cur_hz_2: Double = 0.0
+    
+    //timer to run for like 3 seconds durikng calibration
+    var calibrationTimer: Timer?
+    var calibrationDuration: TimeInterval = 2.0
         
     struct AudioConstants {
         static let AUDIO_BUFFER_SIZE = 1024 * 4
@@ -91,6 +95,8 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print("opened app")
+        
         //sound graph setup
         var run_counter = 0
         // graph and audio processing (taken from original push, just moved to modules)
@@ -121,7 +127,7 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
         animation.duration = 0.5
         
         // setup core motion handlers
-        startMotionUpdates()
+        //startMotionUpdates()
         
         // use delegation for interacting with client 
         client.delegate = self
@@ -176,70 +182,6 @@ extension ViewController {
     }
 }
 
-
-//MARK: Motion Extension Functions
-extension ViewController {
-    // Core Motion Updates
-    func startMotionUpdates(){
-        // some internal inconsistency here: we need to ask the device manager for device
-        
-        if self.motion.isDeviceMotionAvailable{
-            self.motion.deviceMotionUpdateInterval = 1.0/200
-            self.motion.startDeviceMotionUpdates(to: motionOperationQueue, withHandler: self.handleMotion )
-        }
-    }
-    
-    func handleMotion(_ motionData:CMDeviceMotion?, error:Error?){
-        if let accel = motionData?.userAcceleration {
-            self.ringBuffer.addNewData(xData: accel.x, yData: accel.y, zData: accel.z)
-            let mag = fabs(accel.x)+fabs(accel.y)+fabs(accel.z)
-            
-            DispatchQueue.main.async{
-                //show magnitude via indicator
-                self.largeMotionMagnitude.progress = Float(mag)/0.2
-            }
-            
-            if mag > self.magThreshold {
-                // buffer up a bit more data and then notify of occurrence
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: {
-                    self.calibrationOperationQueue.addOperation {
-                        // something large enough happened to warrant
-                        self.largeMotionEventOccurred()
-                    }
-                })
-            }
-        }
-    }
-    
-    // Calibration event has occurred, send to server
-    func largeMotionEventOccurred(){
-        if(self.isCalibrating){
-            //send a labeled example
-            if(self.calibrationStage != .notCalibrating && self.isWaitingForMotionData)
-            {
-                self.isWaitingForMotionData = false
-                
-                // send data to the server with label
-                self.client.sendData(self.ringBuffer.getDataAsVector(),
-                                     withLabel: self.calibrationStage.rawValue)
-                
-                self.nextCalibrationStage()
-            }
-        }
-        else
-        {
-            if(self.isWaitingForMotionData)
-            {
-                self.isWaitingForMotionData = false
-                //predict a label
-                self.client.sendData(self.ringBuffer.getDataAsVector())
-                // dont predict again for a bit
-                setDelayedWaitingToTrue(2.0)
-                
-            }
-        }
-    }
-}
 
 //MARK: Calibration UI Functions
 extension ViewController {
@@ -310,25 +252,103 @@ extension ViewController {
         }
     }
     
-    func nextCalibrationStage(){
+//    func nextCalibrationStage(){
+//        switch self.calibrationStage {
+//        case .notCalibrating:
+//            //start with up arrow
+//            self.calibrationStage = .ooo
+//            setDelayedWaitingToTrue(1.0)
+//            break
+//        case .ooo:
+//            //go to right arrow
+//            self.startAudioRecording(for: "ooo")
+//            self.calibrationStage = .aaa
+//            setDelayedWaitingToTrue(1.0)
+//            break
+//        case .aaa:
+//            //go to down arrow
+//            self.startAudioRecording(for: "aaa")
+//            self.calibrationStage = .notCalibrating
+//            setDelayedWaitingToTrue(1.0)
+//            break
+//        }
+//    }
+    
+    func nextCalibrationStage() {
         switch self.calibrationStage {
         case .notCalibrating:
-            //start with up arrow
+            // start with 'ooo' calibration
             self.calibrationStage = .ooo
-            setDelayedWaitingToTrue(1.0)
-            break
+            setDelayedWaitingToTrue(1.0) // wait briefly before starting the recording
+            startAudioRecording(for: "ooo")  // Start recording for 'ooo'
+            
         case .ooo:
-            //go to right arrow
-            self.calibrationStage = .aaa
-            setDelayedWaitingToTrue(1.0)
-            break
+            // After 2 seconds of recording for 'ooo', switch to 'aaa'
+            DispatchQueue.main.asyncAfter(deadline: .now() + calibrationDuration) {
+                // Stop the audio recording and process peaks
+                self.analyzeAudioPeaks(for: "ooo")
+                
+                // Move to 'aaa' stage
+                self.calibrationStage = .aaa
+                self.setDelayedWaitingToTrue(1.0)
+                self.startAudioRecording(for: "aaa") // Start recording for 'aaa'
+            }
+
         case .aaa:
-            //go to down arrow
-            self.calibrationStage = .notCalibrating
-            setDelayedWaitingToTrue(1.0)
-            break
+            // After 2 seconds of recording for 'aaa', save the peaks and finish calibration
+            DispatchQueue.main.asyncAfter(deadline: .now() + calibrationDuration) {
+                // Stop the audio recording and process peaks
+                self.analyzeAudioPeaks(for: "aaa")
+                
+                // Finish calibration and move to 'notCalibrating' state
+                self.calibrationStage = .notCalibrating
+                self.setDelayedWaitingToTrue(1.0)  // Delay before switching UI back
+            }
         }
     }
+    
+    
+        // MARK: - Audio Recording and Peak Calculation
+        func startAudioRecording(for label: String) {
+            // Reset the audio model's data
+            audio.startMicrophoneProcessing(withFps: 20)
+            
+            // Record audio for the set duration
+            calibrationTimer?.invalidate()  // Invalidate any existing timer
+                calibrationTimer = Timer.scheduledTimer(withTimeInterval: calibrationDuration, repeats: false) { _ in
+                    // After the recording duration, stop the audio processing
+                    self.audio.stopMicrophoneProcessing()
+                    // Analyze the peaks in the FFT data
+                    self.analyzeAudioPeaks(for: label)
+            }
+            
+            //for blinking?
+            if label == "ooo" {
+                    self.setAsCalibrating(self.oooLabel)
+                    self.setAsNormal(self.aaaLabel)
+                } else {
+                    self.setAsCalibrating(self.aaaLabel)
+                    self.setAsNormal(self.oooLabel)
+                }
+        }
+    
+    func analyzeAudioPeaks(for label: String) {
+            //get highest peaks in the data
+            calcTone(audio_data: audio.fftData)
+            
+            // Output the two highest peaks to the console
+            print("\(label) Calibration Peaks:")
+            print("Peak 1: \(cur_hz_1) Hz")
+            print("Peak 2: \(cur_hz_2) Hz")
+            
+            // send data to server
+            client.sendData(self.ringBuffer.getDataAsVector(), withLabel: label)
+            
+        //if u uncomment this, it runs on the 2 second timer but it just switches back and forth constantly btwn the 2, cant get it to stop
+        //right now, have to manually click calibrate once to switch from oo to aaa
+           
+            //nextCalibrationStage()
+        }
     
     
 }
@@ -419,3 +439,68 @@ extension ViewController {
         }
 }
 
+
+
+//MARK: Motion Extension Functions
+//extension ViewController {
+//    // Core Motion Updates
+//    func startMotionUpdates(){
+//        // some internal inconsistency here: we need to ask the device manager for device
+//
+//        if self.motion.isDeviceMotionAvailable{
+//            self.motion.deviceMotionUpdateInterval = 1.0/200
+//            self.motion.startDeviceMotionUpdates(to: motionOperationQueue, withHandler: self.handleMotion )
+//        }
+//    }
+//
+//    func handleMotion(_ motionData:CMDeviceMotion?, error:Error?){
+//        if let accel = motionData?.userAcceleration {
+//            self.ringBuffer.addNewData(xData: accel.x, yData: accel.y, zData: accel.z)
+//            let mag = fabs(accel.x)+fabs(accel.y)+fabs(accel.z)
+//
+//            DispatchQueue.main.async{
+//                //show magnitude via indicator
+//                self.largeMotionMagnitude.progress = Float(mag)/0.2
+//            }
+//
+//            if mag > self.magThreshold {
+//                // buffer up a bit more data and then notify of occurrence
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: {
+//                    self.calibrationOperationQueue.addOperation {
+//                        // something large enough happened to warrant
+//                        self.largeMotionEventOccurred()
+//                    }
+//                })
+//            }
+//        }
+//    }
+//
+//    // Calibration event has occurred, send to server
+//    func largeMotionEventOccurred(){
+//        if(self.isCalibrating){
+//            //send a labeled example
+//            if(self.calibrationStage != .notCalibrating && self.isWaitingForMotionData)
+//            {
+//                self.isWaitingForMotionData = false
+//
+//                // send data to the server with label
+//                self.client.sendData(self.ringBuffer.getDataAsVector(),
+//                                     withLabel: self.calibrationStage.rawValue)
+//
+//                self.nextCalibrationStage()
+//            }
+//        }
+//        else
+//        {
+//            if(self.isWaitingForMotionData)
+//            {
+//                self.isWaitingForMotionData = false
+//                //predict a label
+//                self.client.sendData(self.ringBuffer.getDataAsVector())
+//                // dont predict again for a bit
+//                setDelayedWaitingToTrue(2.0)
+//
+//            }
+//        }
+//    }
+//}

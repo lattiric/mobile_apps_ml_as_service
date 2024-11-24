@@ -344,7 +344,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 7SS3BK2SRA;
+				DEVELOPMENT_TEAM = N8TJNZFDSR;
 				INFOPLIST_FILE = HTTPSwiftLab5/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This App requires microphone access.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -352,7 +352,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "SMU.--PRODUCT-NAME-rfc1034identifier--2";
+				PRODUCT_BUNDLE_IDENTIFIER = "SMU.--PRODUCT-NAME-rfc1034identifier--2-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "HTTPSwiftLab5/mobile_apps_audio_filtering_proj-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -363,7 +363,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 7SS3BK2SRA;
+				DEVELOPMENT_TEAM = N8TJNZFDSR;
 				INFOPLIST_FILE = HTTPSwiftLab5/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This App requires microphone access.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -371,7 +371,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "SMU.--PRODUCT-NAME-rfc1034identifier--2";
+				PRODUCT_BUNDLE_IDENTIFIER = "SMU.--PRODUCT-NAME-rfc1034identifier--2-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "HTTPSwiftLab5/mobile_apps_audio_filtering_proj-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

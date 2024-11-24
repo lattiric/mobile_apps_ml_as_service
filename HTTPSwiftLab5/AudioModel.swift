@@ -14,6 +14,7 @@ class AudioModel {
     // MARK: Properties
     private var BUFFER_SIZE:Int
     var volume:Float = 1
+    private var processingTimer: Timer?   //so we can start and stop it
     
     // thse properties are for interfaceing with the API
     // the user can access these arrays at any time and plot them if they like
@@ -45,12 +46,25 @@ class AudioModel {
             
             // repeat this fps times per second using the timer class
             //   every time this is called, we update the arrays "timeData" and "fftData"
-            Timer.scheduledTimer(withTimeInterval: 1.0/withFps, repeats: true) { _ in
+            processingTimer = Timer.scheduledTimer(withTimeInterval: 1.0/withFps, repeats: true) { _ in
                 self.runEveryInterval()
             }
             
         }
     }
+    
+    func stopMicrophoneProcessing() {
+        // Stop the microphone processing by clearing the inputBlock
+        audioManager?.inputBlock = nil
+        
+        // Invalidate the timer to stop repeated processing
+        processingTimer?.invalidate()
+        
+        // Optionally reset buffers or other resources if needed
+        inputBuffer = CircularBuffer(numChannels: Int64(audioManager!.numInputChannels), andBufferSize: Int64(BUFFER_SIZE))
+            outputBuffer = CircularBuffer(numChannels: Int64(audioManager!.numOutputChannels), andBufferSize: Int64(BUFFER_SIZE))
+    }
+
     
     
     // You must call this when you want the audio to start being handled by our model
