@@ -59,9 +59,8 @@ import motor.motor_asyncio
 from pymongo import ReturnDocument
 
 # Machine Learning, Turi and Sklearn Imports
-import turicreate as tc
-from sklearn.neighbors import KNeighborsClassifier
 
+from sklearn.neighbors import KNeighborsClassifier
 from joblib import dump, load
 import pickle
 import numpy as np
@@ -274,69 +273,69 @@ async def delete_dataset(dsid: int):
 #-------------------------------------------
 # These allow us to interact with the REST server with ML from Turi. 
 
-@app.get(
-    "/train_model_turi/{dsid}",
-    response_description="Train a machine learning model for the given dsid",
-    response_model_by_alias=False,
-)
-async def train_model_turi(dsid: int):
-    """
-    Train the machine learning model using Turi
-    """
+# @app.get(
+#     "/train_model_turi/{dsid}",
+#     response_description="Train a machine learning model for the given dsid",
+#     response_model_by_alias=False,
+# )
+# async def train_model_turi(dsid: int):
+#     """
+#     Train the machine learning model using Turi
+#     """
 
-    # convert data over to a scalable dataframe
+#     # convert data over to a scalable dataframe
 
-    datapoints = await app.collection.find({"dsid": dsid}).to_list(length=None)
+#     datapoints = await app.collection.find({"dsid": dsid}).to_list(length=None)
 
-    if len(datapoints) < 2:
-        raise HTTPException(status_code=404, detail=f"DSID {dsid} has {len(datapoints)} datapoints.") 
+#     if len(datapoints) < 2:
+#         raise HTTPException(status_code=404, detail=f"DSID {dsid} has {len(datapoints)} datapoints.") 
 
-    # convert to dictionary and create SFrame
-    data = tc.SFrame(data={"target":[datapoint["label"] for datapoint in datapoints], 
-        "sequence":np.array([datapoint["feature"] for datapoint in datapoints])}
-    )
+#     # convert to dictionary and create SFrame
+#     data = tc.SFrame(data={"target":[datapoint["label"] for datapoint in datapoints], 
+#         "sequence":np.array([datapoint["feature"] for datapoint in datapoints])}
+#     )
         
-    # create a classifier model  
-    model = tc.classifier.create(data,target="target",verbose=0)# training
+#     # create a classifier model  
+#     model = tc.classifier.create(data,target="target",verbose=0)# training
     
-    # save model for use later, if desired
-    model.save("../models/turi_model_dsid%d"%(dsid))
+#     # save model for use later, if desired
+#     model.save("../models/turi_model_dsid%d"%(dsid))
 
-    # save this for use later 
-    app.clf[dsid] = model 
+#     # save this for use later 
+#     app.clf[dsid] = model 
 
-    return {"summary":f"{model}"}
-
-
-@app.post(
-    "/predict_turi/",
-    response_description="Predict Label from Datapoint",
-)
-async def predict_datapoint_turi(datapoint: FeatureDataPoint = Body(...)):
-    """
-    Post a feature set and get the label back
-
-    """
-
-    # place inside an SFrame (that has one row)
-    data = tc.SFrame(data={"sequence":np.array(datapoint.feature).reshape((1,-1))})
-
-    if(app.clf.get(datapoint.dsid) is not None):
-        pass
-    else:
-        print("Loading Turi Model From file")
-        # if(os.path.exists("../models/turi_model_dsid%d"%(datapoint.dsid))):
-        #     app.clf[datapoint.dsid] = tc.load_model("../models/turi_model_dsid%d"%(datapoint.dsid))
-        # else:
-        raise HTTPException(status_code=500, detail=f"DSID {datapoint.dsid} has no model trained.")
-
-        # TODO: what happens if the user asks for a model that was never trained?
-        #       or if the user asks for a dsid without any data? 
-        #       need a graceful failure for the client...
+#     return {"summary":f"{model}"}
 
 
-    pred_label = app.clf[datapoint.dsid].predict(data)
-    return {"prediction":str(pred_label)}
+# @app.post(
+#     "/predict_turi/",
+#     response_description="Predict Label from Datapoint",
+# )
+# async def predict_datapoint_turi(datapoint: FeatureDataPoint = Body(...)):
+#     """
+#     Post a feature set and get the label back
+
+#     """
+
+#     # place inside an SFrame (that has one row)
+#     data = tc.SFrame(data={"sequence":np.array(datapoint.feature).reshape((1,-1))})
+
+#     if(app.clf.get(datapoint.dsid) is not None):
+#         pass
+#     else:
+#         print("Loading Turi Model From file")
+#         # if(os.path.exists("../models/turi_model_dsid%d"%(datapoint.dsid))):
+#         #     app.clf[datapoint.dsid] = tc.load_model("../models/turi_model_dsid%d"%(datapoint.dsid))
+#         # else:
+#         raise HTTPException(status_code=500, detail=f"DSID {datapoint.dsid} has no model trained.")
+
+#         # TODO: what happens if the user asks for a model that was never trained?
+#         #       or if the user asks for a dsid without any data? 
+#         #       need a graceful failure for the client...
+
+
+#     pred_label = app.clf[datapoint.dsid].predict(data)
+#     return {"prediction":str(pred_label)}
 
 
 #===========================================
