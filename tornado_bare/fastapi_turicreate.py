@@ -418,3 +418,111 @@ async def predict_datapoint_sklearn(datapoint: FeatureDataPoint = Body(...)):
 
 
 
+
+
+##### SECOND MODEL #####
+@app.post(
+    "/labeled_data_secondModel/",
+    response_description="Add new labeled datapoint",
+    response_model=LabeledDataPoint,
+    status_code=status.HTTP_201_CREATED,
+    response_model_by_alias=False,
+)
+async def create_datapoint(datapoint: LabeledDataPoint = Body(...)):
+    """
+    Insert a new data point. Let user know the range of values inserted
+
+    A unique `id` will be created and provided in the response.
+    """
+
+    # insert this datapoint into the database
+    new_label = await app.collection.insert_one(
+        datapoint.model_dump(by_alias=True, exclude=["id"])
+    )
+
+    # send back info about the record
+    created_label = await app.collection.find_one(
+        {"_id": new_label.inserted_id}
+    )
+    # also min/max of array, rather than the entire to array to save some bandwidth
+    # the datapoint variable is a pydantic model, so we can access with properties
+    # but the output of mongo is a dictionary, so we need to subscript the entry
+    created_label["feature"] = [min(datapoint.feature), max(datapoint.feature)]
+
+    return created_label
+
+
+
+@app.post(
+    "/predict_secondModel/",
+    response_description="Predict Label from Datapoint",
+)
+async def predict_datapoint_secondModel(datapoint: FeatureDataPoint = Body(...)):
+    """
+    Post a feature set and get the label back
+
+    """
+    # # place inside an SFrame (that has one row)
+    # data = np.array(datapoint.feature).reshape((1,-1))
+
+    # if(app.clf[datapoint.dsid] == []):
+    #     print("Loading Sklearn Model From file")
+    #     tmp = load('../models/sklearn_model_dsid%d.joblib'%(dsid))
+    #     app.clf[datapoint.dsid] = pickle.loads(tmp['model'])
+
+    #     # TODO: what happens if the user asks for a model that was never trained?
+    #     #       or if the user asks for a dsid without any data?
+    #     #       need a graceful failure for the client...
+
+
+    # pred_label = app.clf[datapoint.dsid].predict(data)
+    # return {"prediction":str(pred_label)}
+
+    data = np.array(datapoint.feature).reshape((1,-1))
+
+    if(app.clf.get(datapoint.dsid) is not None):
+        pass
+    else:
+        print("Loading SKLearn Model From file")
+        raise HTTPException(status_code=500, detail=f"DSID {datapoint.dsid} has no model trained.")
+
+    pred_label = app.clf[datapoint.dsid].predict(data)
+    return {"prediction":str(pred_label)}
+
+
+@app.get(
+    "/train_model_second/{dsid}",
+    response_description="Train a machine learning model for the given dsid",
+    response_model_by_alias=False,
+)
+async def train_model_second(dsid: int):
+    """
+    Train the machine learning model using Scikit-learn
+    """
+
+    # convert data over to a scalable dataframe
+
+    datapoints = await app.collection.find({"dsid": dsid}).to_list(length=None)
+
+    if len(datapoints) < 2:
+        raise HTTPException(status_code=404, detail=f"DSID {dsid} has {len(datapoints)} datapoints.")
+
+        # convert to dictionary and create SFrame
+    labels = [datapoint["label"] for datapoint in datapoints]
+    features = [datapoint["feature"] for datapoint in datapoints]
+
+    # create a classifier model
+    model = KNeighborsClassifier(n_neighbors=1)
+
+    model.fit(features, labels)  # training
+    yhat = model.predict(features)
+    acc = sum(yhat == labels) / float(len(labels))
+
+    # just write this to model files directory
+    dump(model, '../models/sklearn_model_dsid%d.joblib' % (dsid))
+
+    # save this for use later
+    app.clf[dsid] = model
+
+    return {"summary": f"KNN classifier with accuracy {acc}"}
+

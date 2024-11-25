@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c5420336-2d84-4f15-bfab-9417cd9381b6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../HTTPSwiftLab5/MlaasModel.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../HTTPSwiftLab5/MlaasModel.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../models/sklearn_model_dsid5.joblib" beforeDir="false" afterPath="$PROJECT_DIR$/../models/sklearn_model_dsid5.joblib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fastapi_turicreate.py" beforeDir="false" afterPath="$PROJECT_DIR$/fastapi_turicreate.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AlexPetmecky&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/lattiric/mobile_apps_ml_as_service.git&quot;,
+    &quot;accountId&quot;: &quot;22f74961-799d-4abf-97e8-bcfe76433fe5&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2pH7gBLTAUpqbuVEOSkdKVOxUWy" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "alex",
+    "last_opened_file_path": "/Users/alexpetmecky/Desktop/lab_5_ma/mobile_apps_ml_as_service/tornado_bare",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-PY-242.20224.347" />
+        <option value="bundled-python-sdk-c2d6afa66fbe-39cff9de6eef-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.20224.347" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c5420336-2d84-4f15-bfab-9417cd9381b6" name="Changes" comment="" />
+      <created>1732411255954</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732411255954</updated>
+      <workItem from="1732411256997" duration="191000" />
+      <workItem from="1732411461235" duration="1859000" />
+      <workItem from="1732490257816" duration="4060000" />
+      <workItem from="1732500018455" duration="2097000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
