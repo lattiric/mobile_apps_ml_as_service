@@ -12,38 +12,39 @@ let BUFFER_SIZE = 50
 
 class RingBuffer: NSObject {
     
-    var x = [Double](repeating:0, count:BUFFER_SIZE)
-    var y = [Double](repeating:0, count:BUFFER_SIZE)
-    var z = [Double](repeating:0, count:BUFFER_SIZE)
+    // Arrays to hold the peaks (instead of x, y, z)
+    var peak1 = [Double](repeating: 0, count: BUFFER_SIZE)
+    var peak2 = [Double](repeating: 0, count: BUFFER_SIZE)
     
-    var head:Int = 0 {
-        didSet{
-            if(head >= BUFFER_SIZE){
+    var head: Int = 0 {
+        didSet {
+            if head >= BUFFER_SIZE {
                 head = 0
             }
-            
         }
     }
     
-    func addNewData(xData:Double,yData:Double,zData:Double){
-        x[head] = xData
-        y[head] = yData
-        z[head] = zData
-        
+    // Modify to accept peak1 and peak2 data
+    func addNewData(peak1Data: Double, peak2Data: Double) {
+        print("Adding new data: \(peak1Data), \(peak2Data)")  // Debugging line
+        peak1[head] = peak1Data
+        peak2[head] = peak2Data
         head += 1
+        if head >= BUFFER_SIZE {
+            head = 0
+        }
     }
     
-    func getDataAsVector()->[Double]{
-        var allVals = [Double](repeating:0, count:3*BUFFER_SIZE)
+    func getDataAsVector() -> [Double] {
+        var allVals = [Double](repeating: 0, count: 2 * BUFFER_SIZE)
         
         for i in 0..<BUFFER_SIZE {
-            let idx = (head+i)%BUFFER_SIZE
-            allVals[3*i] = x[idx]
-            allVals[3*i+1] = y[idx]
-            allVals[3*i+2] = z[idx]
+            let idx = (head + i) % BUFFER_SIZE
+            allVals[2 * i] = peak1[idx]
+            allVals[2 * i + 1] = peak2[idx]
+            //print("Data at \(i): \(peak1[idx]), \(peak2[idx])")  // Debugging line
         }
         
         return allVals
     }
-
 }
