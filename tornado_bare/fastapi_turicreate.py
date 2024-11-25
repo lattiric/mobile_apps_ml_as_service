@@ -50,6 +50,7 @@ from fastapi import FastAPI, Body, HTTPException, status
 from fastapi.responses import Response
 from pydantic import ConfigDict, BaseModel, Field, EmailStr
 from pydantic.functional_validators import BeforeValidator
+from sklearn.ensemble import RandomForestClassifier
 
 from typing_extensions import Annotated
 
@@ -512,7 +513,9 @@ async def train_model_second(dsid: int):
     features = [datapoint["feature"] for datapoint in datapoints]
 
     # create a classifier model
-    model = KNeighborsClassifier(n_neighbors=1)
+    #model = KNeighborsClassifier(n_neighbors=1)
+    model = RandomForestClassifier(n_estimators=1)
+
 
     model.fit(features, labels)  # training
     yhat = model.predict(features)
@@ -524,5 +527,5 @@ async def train_model_second(dsid: int):
     # save this for use later
     app.clf[dsid] = model
 
-    return {"summary": f"KNN classifier with accuracy {acc}"}
+    return {"summary": f"RandomForest classifier with accuracy {acc}"}
 
