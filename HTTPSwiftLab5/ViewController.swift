@@ -51,6 +51,20 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     @IBOutlet weak var freq1: UILabel!
     @IBOutlet weak var freq2: UILabel!
     @IBOutlet weak var userView: UIView!
+    
+    
+    var isListeningForPreds: Int = 0
+    @IBAction func togglePredictionListening(_ sender: Any) {
+        if(isListeningForPreds == 0){
+            isListeningForPreds = 1
+            self.startPredictions()
+        }else{
+            isListeningForPreds = 0
+            self.stopPredictions()
+        }
+        
+    }
+    
     var cur_hz_1: Double = 0.0
     var cur_hz_2: Double = 0.0
     var peak_1_index:Int = 0
@@ -61,7 +75,9 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     //timer to run for like 3 seconds durikng calibration
     var calibrationTimer: Timer?
     var calibrationDuration: TimeInterval = 2.0
-        
+    var predictionTimer: Timer?
+    var predictionDuration: TimeInterval = 1.0
+    
     struct AudioConstants {
         static let AUDIO_BUFFER_SIZE = 1024 * 4
     }
@@ -86,13 +102,6 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
         
     @IBAction func magnitudeChanged(_ sender: UISlider) {
         self.magThreshold = Double(sender.value)
-    }
-       
-    @IBOutlet weak var IPTextField: UITextField!
-    
-    @IBAction func IP_text(_ sender: UITextField) {
-        self.ipUrlAdress = sender.text!
-        self.client.server_ip = self.ipUrlAdress
     }
     
     // MARK: View Controller Life Cycle
@@ -137,7 +146,7 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
         client.delegate = self
         client.updateDsid(5) // set default dsid to start with
         
-        IPTextField.delegate = self
+//        IPTextField.delegate = self
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -436,6 +445,40 @@ extension ViewController {
                 self.harmonic_value = Double(data[peak_index*2])
                 let ratio_percent = harmonic_value/peak_value
             }
+    
+    func startPredictions(){
+        audio.startMicrophoneProcessing(withFps: 20)
+        
+        predictionTimer?.invalidate()  // get rid of any existing timer
+        predictionTimer = Timer.scheduledTimer(withTimeInterval: predictionDuration, repeats: true) { _ in
+            
+            var vol_max: Float = 0.0
+            for x in 1...100 {
+                if(self.audio.timeData[x] > vol_max){
+                    vol_max = self.audio.timeData[x]
+                }
+            }
+            print("Max Volume: ", vol_max)
+            if(vol_max > 0.16){
+                self.calcTone(audio_data: self.audio.fftData)
+                self.calcVowel(audio_data: self.audio.fftData, peak_index: self.peak_1_index)
+                
+                // Output the two highest peaks to the console
+                print("Prediction Peaks:")
+                print("Peak 1: \(self.peak_value) Hz")
+                print("Peak 2: \(self.harmonic_value) Hz")
+                
+                // send data to server
+                let dataToSend: [Double] = [self.peak_value, self.harmonic_value]
+                self.client.sendData(dataToSend)
+            }
+        }
+    }
+    
+    func stopPredictions(){
+        audio.stopMicrophoneProcessing()
+        predictionTimer?.invalidate()
+    }
 }
 
 
