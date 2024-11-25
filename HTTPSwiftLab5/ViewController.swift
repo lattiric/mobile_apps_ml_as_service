@@ -53,6 +53,9 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     @IBOutlet weak var userView: UIView!
     var cur_hz_1: Double = 0.0
     var cur_hz_2: Double = 0.0
+    var peak_1_index: Int = 0
+    var peak_value: Double = 0.0
+    var harmonic_value: Double = 0.0
     
     //timer to run for like 3 seconds durikng calibration
     var calibrationTimer: Timer?
@@ -323,16 +326,20 @@ extension ViewController {
     func analyzeAudioPeaks(for label: String) {
             //get highest peaks in the data
             calcTone(audio_data: audio.fftData)
+            calcVowel(audio_data: audio.fftData, peak_index: self.peak_1_index)
             
             // Output the two highest peaks to the console
             print("\(label) Calibration Peaks:")
-            print("Peak 1: \(cur_hz_1) Hz")
-            print("Peak 2: \(cur_hz_2) Hz")
+//            print("Peak 1: \(cur_hz_1) Hz")
+//            print("Peak 2: \(cur_hz_2) Hz")
+            print("Peak 1: \(peak_value) Hz")
+            print("Peak 2: \(harmonic_value) Hz")
             
             // send data to server
             //client.sendData([cur_hz_1, cur_hz_2], withLabel: label)
-            ringBuffer.addNewData(peak1Data: cur_hz_1, peak2Data: cur_hz_2)
-            let dataVector = ringBuffer.getDataAsVector()
+//            ringBuffer.addNewData(peak1Data: cur_hz_1, peak2Data: cur_hz_2)
+//            ringBuffer.addNewData(peak1Data: peak_value, peak2Data: harmonic_value)
+            let dataVector: [Double] = [peak_value, harmonic_value]
             client.sendData(dataVector, withLabel: label)
            
         if self.calibrationStage != .notCalibrating {  //ok fixed this, will calibrate oo once and aa once for each time u click "calibrate once"
@@ -368,6 +375,7 @@ extension ViewController {
         func updateLabels() {
             if let label1 = self.freq1, let label2 = self.freq2 {
                 self.calcTone(audio_data: audio.fftData)
+                self.calcVowel(audio_data: audio.fftData, peak_index: peak_1_index)
                 var output_label_1 = String(Int(cur_hz_1))
                 label1.text = output_label_1 + " Hz"
                 var output_label_2 = String(Int(cur_hz_2))
@@ -387,8 +395,8 @@ extension ViewController {
             var max_list_val: [Int: Float] = [:]
             var hz_per_index = 44100.0/Double(AudioConstants.AUDIO_BUFFER_SIZE)
             
-            for i in 1...(data.count-5) {
-                window = Array(data[(i)...(i)+4])
+            for i in 9...(data.count-6) {
+                window = Array(data[(i)...(i)+5])
 
                 if let win_max = window.max(){
                     if let win_index = data.firstIndex(of: win_max){
@@ -407,7 +415,7 @@ extension ViewController {
             //populates all possible peaks
             var possible_peaks: [Int: Float] = [:]
             for item in max_list{
-                if item.value >= 5{
+                if item.value >= 6{
                     possible_peaks[item.key] = max_list_val[item.key]
                 }
             }
@@ -415,6 +423,7 @@ extension ViewController {
             // Get first highest frequency from dict
             if let (key, _) = possible_peaks.max(by: { $0.value < $1.value }){
                 cur_hz_1 = Double(key)*hz_per_index
+                peak_1_index = key
                 possible_peaks.removeValue(forKey: key)
             } else {
                 cur_hz_1 = Double(0.0)
@@ -426,6 +435,13 @@ extension ViewController {
             } else {
                 cur_hz_2 = Double(0.0)
             }
+        }
+    
+        func calcVowel(audio_data: [Float], peak_index: Int) {
+            let data: [Float] = audio_data
+            self.peak_value = Double(data[peak_index])
+            self.harmonic_value = Double(data[peak_index*2])
+            let ratio_percent = harmonic_value/peak_value
         }
 }
 
