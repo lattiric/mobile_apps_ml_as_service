@@ -52,7 +52,6 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     @IBOutlet weak var freq2: UILabel!
     @IBOutlet weak var userView: UIView!
     
-    
     var isListeningForPreds: Int = 0
     @IBAction func togglePredictionListening(_ sender: Any) {
         if(isListeningForPreds == 0){
@@ -86,6 +85,10 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     lazy var graph: MetalGraph? = {
         return MetalGraph(userView: self.userView)
     }()
+    
+    @IBAction func goToGradSection(_ sender: Any) {
+    }
+    
     
     // MARK: Class Properties with Observers
     enum CalibrationStage:String {

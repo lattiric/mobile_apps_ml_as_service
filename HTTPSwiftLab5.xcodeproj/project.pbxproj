@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		58C6415A2CF4594A00751EA8 /* GradViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C641592CF4594900751EA8 /* GradViewController.swift */; };
+		58C6415C2CF46A2B00751EA8 /* audio_test_data.csv in Resources */ = {isa = PBXBuildFile; fileRef = 58C6415B2CF46A2A00751EA8 /* audio_test_data.csv */; };
 		58D269052CF2C251007DEA02 /* AudioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D269042CF2C251007DEA02 /* AudioModel.swift */; };
 		58D269132CF2C26C007DEA02 /* AudioFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D269072CF2C26C007DEA02 /* AudioFileReader.m */; };
 		58D269142CF2C26C007DEA02 /* MetalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D2690C2CF2C26C007DEA02 /* MetalGraph.swift */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		58C641592CF4594900751EA8 /* GradViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradViewController.swift; sourceTree = "<group>"; };
+		58C6415B2CF46A2A00751EA8 /* audio_test_data.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = audio_test_data.csv; sourceTree = "<group>"; };
 		58D269042CF2C251007DEA02 /* AudioModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioModel.swift; sourceTree = "<group>"; };
 		58D269062CF2C26C007DEA02 /* AudioFileReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioFileReader.h; sourceTree = "<group>"; };
 		58D269072CF2C26C007DEA02 /* AudioFileReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioFileReader.m; sourceTree = "<group>"; };
@@ -99,8 +103,10 @@
 		B67483D71ACA2D6800A9970E /* HTTPSwiftLab5 */ = {
 			isa = PBXGroup;
 			children = (
+				58C6415B2CF46A2A00751EA8 /* audio_test_data.csv */,
 				B67483DA1ACA2D6800A9970E /* AppDelegate.swift */,
 				B67483DC1ACA2D6800A9970E /* ViewController.swift */,
+				58C641592CF4594900751EA8 /* GradViewController.swift */,
 				58D269042CF2C251007DEA02 /* AudioModel.swift */,
 				B6022E662C108DB400E2CC70 /* MlaasModel.swift */,
 				58D2691A2CF2E397007DEA02 /* mobile_apps_audio_filtering_proj-Bridging-Header.h */,
@@ -185,6 +191,7 @@
 				B67483E01ACA2D6800A9970E /* Main.storyboard in Resources */,
 				B67483E51ACA2D6800A9970E /* LaunchScreen.xib in Resources */,
 				B67483E21ACA2D6800A9970E /* Images.xcassets in Resources */,
+				58C6415C2CF46A2B00751EA8 /* audio_test_data.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +207,7 @@
 				58D269142CF2C26C007DEA02 /* MetalGraph.swift in Sources */,
 				58D269152CF2C26C007DEA02 /* Novocaine.m in Sources */,
 				58D269162CF2C26C007DEA02 /* CircularBuffer.m in Sources */,
+				58C6415A2CF4594A00751EA8 /* GradViewController.swift in Sources */,
 				58D269172CF2C26C007DEA02 /* TempClass.m in Sources */,
 				58D269182CF2C26C007DEA02 /* Shaders.metal in Sources */,
 				58D269192CF2C26C007DEA02 /* FFTHelper.m in Sources */,

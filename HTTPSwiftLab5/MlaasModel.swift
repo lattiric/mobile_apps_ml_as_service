@@ -217,6 +217,32 @@ class MlaasModel: NSObject, URLSessionDelegate{
         
     }
     
+//    func trainCoreMLModel(){
+//        let baseURL = "http://\(server_ip):8000/train_model_sklearn/\(dsid)"
+//        let postUrl = URL(string: "\(baseURL)")
+//        
+//        // create a custom HTTP POST request
+//        var request = URLRequest(url: postUrl!)
+//        
+//        request.httpMethod = "GET"
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//        
+//        let getTask : URLSessionDataTask = self.session.dataTask(with: request,
+//                        completionHandler:{(data, response, error) in
+//            // TODO: handle error!
+//            let jsonDictionary = self.convertDataToDictionary(with: data)
+//                            
+//            if let summary = jsonDictionary["summary"] as? String {
+//                // tell delegate to update interface for the Dsid
+//                print(summary)
+//            }
+//
+//        })
+//        
+//        getTask.resume() // start the task
+//        
+//    }
+    
     //MARK: Utility Functions
     private func matchIp(for regex:String, in text:String)->(Bool){
         do {
