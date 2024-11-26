@@ -86,8 +86,7 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
         return MetalGraph(userView: self.userView)
     }()
     
-    @IBAction func goToGradSection(_ sender: Any) {
-    }
+    
     
     
     // MARK: Class Properties with Observers
@@ -446,7 +445,6 @@ extension ViewController {
                 let data: [Float] = audio_data
                 self.peak_value = Double(data[peak_index])
                 self.harmonic_value = Double(data[peak_index*2])
-                let ratio_percent = harmonic_value/peak_value
             }
     
     func startPredictions(){
