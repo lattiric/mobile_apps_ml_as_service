@@ -30,7 +30,7 @@ class MlaasModel: NSObject, URLSessionDelegate{
     private let operationQueue = OperationQueue()
     // default ip, if you are unsure try: ifconfig |grep "inet "
     // to see what your public facing IP address is
-    var server_ip = "10.0.0.41" // this will be the default ip
+    var server_ip = "192.168.0.229" // this will be the default ip
     // create a delegate for using the protocol
     var delegate:ClientDelegate?
     private var dsid:Int = 2
@@ -74,6 +74,7 @@ class MlaasModel: NSObject, URLSessionDelegate{
     
     //MARK: Main Functions
     func sendData(_ array:[Double], withLabel label:String){
+        //first
         let baseURL = "http://\(server_ip):8000/labeled_data/"
         let postUrl = URL(string: "\(baseURL)")
         
@@ -149,6 +150,7 @@ class MlaasModel: NSObject, URLSessionDelegate{
                         print("Error Present: No model present in the given DSID")
                     } else{
                         let jsonDictionary = self.convertDataToDictionary(with: data)
+                        print(jsonDictionary)
                         delegate.receivedPrediction(jsonDictionary)
                     }
                 }
@@ -193,6 +195,123 @@ class MlaasModel: NSObject, URLSessionDelegate{
     
     func trainModel(){
         let baseURL = "http://\(server_ip):8000/train_model_sklearn/\(dsid)"
+        let postUrl = URL(string: "\(baseURL)")
+        
+        // create a custom HTTP POST request
+        var request = URLRequest(url: postUrl!)
+        
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let getTask : URLSessionDataTask = self.session.dataTask(with: request,
+                        completionHandler:{(data, response, error) in
+            // TODO: handle error!
+            let jsonDictionary = self.convertDataToDictionary(with: data)
+                            
+            if let summary = jsonDictionary["summary"] as? String {
+                // tell delegate to update interface for the Dsid
+                print(summary)
+            }
+
+        })
+        
+        getTask.resume() // start the task
+        
+    }
+    //MARK: Second ML model functions
+    
+    func sendData_newModel(_ array:[Double], withLabel label:String){
+        let baseURL = "http://\(server_ip):8000/labeled_data_secondModel/"
+        let postUrl = URL(string: "\(baseURL)")
+        
+        // create a custom HTTP POST request
+        var request = URLRequest(url: postUrl!)
+        
+        // utility method to use from below
+        let requestBody:Data = try! JSONSerialization.data(withJSONObject: ["feature":array,
+            "label":"\(label)",
+            "dsid":self.dsid])
+        
+        // The Type of the request is given here
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = requestBody
+        
+        let postTask : URLSessionDataTask = self.session.dataTask(with: request,
+                        completionHandler:{(data, response, error) in
+            //TODO: notify delegate?
+            if(error != nil){
+                if let res = response{
+                    print("Response:\n",res)
+                }
+            }
+            else{
+                let jsonDictionary = self.convertDataToDictionary(with: data)
+                
+                print(jsonDictionary["feature"]!)
+                print(jsonDictionary["label"]!)
+            }
+        })
+        postTask.resume() // start the task
+    }
+    
+    
+    func sendData_newModel(_ array:[Double]){
+        //sends a prediction to the second model
+        let baseURL = "http://\(server_ip):8000/predict_secondModel/"
+        let postUrl = URL(string: "\(baseURL)")
+        
+        // create a custom HTTP POST request
+        var request = URLRequest(url: postUrl!)
+        
+        // utility method to use from below
+        let requestBody:Data = try! JSONSerialization.data(withJSONObject: ["feature":array,
+                                                                            "dsid":self.dsid])
+//        if(requestBody != nil){
+//            print("Alls good lol")
+//        } else{
+//            print("ERROR: No model in request body, getting model from previous dsid")
+//            self.dsid = self.dsid-1
+//        }
+        
+        // The Type of the request is given here
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = requestBody
+        
+        let postTask : URLSessionDataTask = self.session.dataTask(with: request,
+                        completionHandler:{(data, response, error) in
+            
+            if(error != nil){
+                print("Error from server")
+                if let res = response{
+                    print("Response:\n",res)
+                }
+            }
+            else{
+                
+                let httpResponse = response as? HTTPURLResponse
+                
+                if let delegate = self.delegate {
+                    if(httpResponse?.allHeaderFields["Content-Type"] as! String == "text/plain; charset=utf-8"){
+                        print("Error Present: No model present in the given DSID")
+                    } else{
+                        let jsonDictionary = self.convertDataToDictionary(with: data)
+                        delegate.receivedPrediction(jsonDictionary)
+                    }
+                }
+                
+            }
+        })
+        
+        postTask.resume() // start the task
+        
+        
+    }
+    
+    
+    func trainModel_second(){
+        let baseURL = "http://\(server_ip):8000/train_model_second/\(dsid)"
         let postUrl = URL(string: "\(baseURL)")
         
         // create a custom HTTP POST request
