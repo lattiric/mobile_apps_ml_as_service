@@ -367,6 +367,7 @@ extension ViewController {
         // send data to server
         let dataToSend: [Double] = [peak_value, harmonic_value]
         client.sendData(dataToSend, withLabel: label)
+        client.sendData_newModel(dataToSend, withLabel: label)
            
         if self.calibrationStage != .notCalibrating {  //ok fixed this, will calibrate oo once and aa once for each time u click "calibrate once"
                 nextCalibrationStage()
@@ -490,6 +491,7 @@ extension ViewController {
                 
                 // send data to server
                 let dataToSend: [Double] = [self.peak_value, self.harmonic_value]
+                self.client.sendData(dataToSend)
                 self.client.sendData(dataToSend)
             }
         }
