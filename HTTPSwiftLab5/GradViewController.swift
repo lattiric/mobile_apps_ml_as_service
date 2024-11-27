@@ -7,6 +7,7 @@
 //
 
 import CreateML
+import CoreML
 import UIKit
 import Metal
 import Accelerate
@@ -14,13 +15,11 @@ import Accelerate
 class GradViewController: UIViewController {
 
     @IBOutlet weak var testOutputLabel: UILabel!
+    @IBOutlet weak var predictionLabel: UILabel!
     
-    @IBAction func trainModel(_ sender: Any) {
-        self.trainCoreMLModel()
-    }
     @IBAction func makePrediction(_ sender: Any) {
         self.calcVowel(audio_data: self.audio.fftData, peak_index: self.peak_1_index)
-        //code for making prediction with the model here
+        self.testModel()
     }
     let client = MlaasModel()
     
@@ -74,69 +73,6 @@ class GradViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-//    func createModel(fileName: String?){
-//        do {
-//            let config = MLModelConfiguration()
-//            let model = try GoogLeNetPlaces(configuration: config)
-//        }
-//    }
-    
-    func trainCoreMLModel(){
-        do {
-            //read in dataset
-            let csvFile = Bundle.main.url(forResource: "audio_table_data_test", withExtension: "csv")!
-            let dataTable = try MLDataTable(contentsOf: csvFile)
-            print(dataTable)
-            
-            //set columns to grab
-            let classifierColumns = ["Peak", "Harmonic", "Vowel"]
-            let classifierTable = dataTable[classifierColumns]
-            
-            //divide data
-            let (classifierEvaluationTable, classifierTrainingTable) = classifierTable.randomSplit(by: 0.20, seed: 5)
-            let classifier = try MLDecisionTreeClassifier(trainingData: classifierTrainingTable,
-                                              targetColumn: "Vowel")
-            
-            let trainingError = classifier.trainingMetrics.classificationError
-            let trainingAccuracy = (1.0 - trainingError) * 100
-
-            // Classifier validation accuracy as a percentage
-            let validationError = classifier.validationMetrics.classificationError
-            let validationAccuracy = (1.0 - validationError) * 100
-            
-            let classifierEvaluation = classifier.evaluation(on: classifierEvaluationTable)
-
-            // Classifier evaluation accuracy as a percentage
-            let evaluationError = classifierEvaluation.classificationError
-            let evaluationAccuracy = (1.0 - evaluationError) * 100
-            
-            
-            print("Train Accuracy: ",trainingAccuracy)
-            print("Val Accuracy: ",validationAccuracy)
-            print("Eval Accuracy: ",evaluationAccuracy)
-            
-            testOutputLabel.text = String(validationAccuracy)
-            
-            let classifierMetadata = MLModelMetadata(author: "Rick Lattin",
-                                                     shortDescription: "Predicts the whether the vowel ooo or aaa is said",
-                                                     version: "1.0")
-
-
-            // Save the trained classifier model to the Desktop.
-            let gradFileUrl = URL(fileURLWithPath: "/Users/ricklattin/Documents/SMU Year 5 Sem 1/Mobile Apps/Mobile Apps Lab 5/mobile_apps_ml_as_service/HTTPSwiftLab5/grad_cur_audio_model.mlmodel")
-            
-//            let grad_models_path = "/Users/ricklattin/Documents/grad_models"
-//            let fileManager = FileManager.default
-//            if !fileManager.fileExists(atPath: grad_models_path) {
-//                try fileManager.createDirectory(atPath: grad_models_path, withIntermediateDirectories: true, attributes: nil)
-//            }
-            try classifier.write(to: gradFileUrl, metadata: classifierMetadata)
-        } catch {
-            print("Error loading data table: \(error)")
-        }
-    }
-    
-    
     // MARK: - Audio Input Functions
     func setupGraph() {
             if let graph = self.graph {
@@ -160,9 +96,9 @@ class GradViewController: UIViewController {
         func updateLabels() {
             if let label1 = self.freq1grad, let label2 = self.freq2grad {
                 self.calcTone(audio_data: audio.fftData)
-                var output_label_1 = String(Int(cur_hz_1))
+//                var output_label_1 = String(Int(cur_hz_1))
                 label1.text = String(peak_value) + " Hz"
-                var output_label_2 = String(Int(cur_hz_2))
+//                var output_label_2 = String(Int(cur_hz_2))
                 label2.text = String(harmonic_value) + " Hz"
             }
         }
@@ -173,11 +109,11 @@ class GradViewController: UIViewController {
         }
         
         func calcTone(audio_data: [Float]) {
-            var data: [Float] = audio_data
+            let data: [Float] = audio_data
             var window: [Float] = []
             var max_list: [Int: Int] = [:]
             var max_list_val: [Int: Float] = [:]
-            var hz_per_index = 44100.0/Double(AudioConstants.AUDIO_BUFFER_SIZE)
+            let hz_per_index = 44100.0/Double(AudioConstants.AUDIO_BUFFER_SIZE)
             
             for i in 9...(data.count-6) {
                 window = Array(data[(i)...(i)+5])
@@ -225,19 +161,88 @@ class GradViewController: UIViewController {
         let data: [Float] = audio_data
         self.peak_value = Double(data[peak_index])
         self.harmonic_value = Double(data[peak_index*2])
-        let ratio_percent = harmonic_value/peak_value
+//        let ratio_percent = harmonic_value/peak_value
+    }
+    
+    func copyBundleFileToDocumentsDirectoryIfNeeded(file:String) {
+            let fileManager = FileManager.default
+            guard let bundleURL = Bundle.main.url(forResource: file, withExtension: "json"),
+                  let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(file+".json") else {
+                print("File path error.")
+                return
+            }
+            
+            if !fileManager.fileExists(atPath: documentsURL.path) {
+                do {
+                    try fileManager.copyItem(at: bundleURL, to: documentsURL)
+                    print(file+".json copied to documents directory.")
+                } catch {
+                    print("Failed to copy \(file).json: \(error.localizedDescription)")
+                }
+            }
     }
     
     
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    // MARK: - Create ML Functions
+    func testModel(){
+        do {
+            let config = MLModelConfiguration()
+            let model = try AudioTabularClassifier_1(configuration: config)
+            let prediction = try model.prediction(Peak: peak_value, Harmonic: harmonic_value)
+            print(String(prediction.Vowel))
+            self.predictionLabel.text = "Prediction Result: " + String(prediction.Vowel)
+        } catch {
+            
+        }
     }
-    */
+    
+    
+//    func trainCoreMLModel(){
+//        do {
+//            //read in dataset
+//            copyBundleFileToDocumentsDirectoryIfNeeded(file: "audio_table_data_test")
+//            let csvFile = Bundle.main.url(forResource: "audio_table_data_test", withExtension: "csv")!
+//            let dataTable = try MLDataTable(contentsOf: csvFile)
+//            print(dataTable)
+//            
+//            //set columns to grab
+//            let classifierColumns = ["Peak", "Harmonic", "Vowel"]
+//            let classifierTable = dataTable[classifierColumns]
+//            
+//            //divide data
+//            let (classifierEvaluationTable, classifierTrainingTable) = classifierTable.randomSplit(by: 0.20, seed: 5)
+//            let classifier = try MLDecisionTreeClassifier(trainingData: classifierTrainingTable,
+//                                              targetColumn: "Vowel")
+//            
+//            let trainingError = classifier.trainingMetrics.classificationError
+//            let trainingAccuracy = (1.0 - trainingError) * 100
+//
+//            // Classifier validation accuracy as a percentage
+//            let validationError = classifier.validationMetrics.classificationError
+//            let validationAccuracy = (1.0 - validationError) * 100
+//            
+//            let classifierEvaluation = classifier.evaluation(on: classifierEvaluationTable)
+//
+//            // Classifier evaluation accuracy as a percentage
+//            let evaluationError = classifierEvaluation.classificationError
+//            let evaluationAccuracy = (1.0 - evaluationError) * 100
+//            
+//            print("Train Accuracy: ",trainingAccuracy)
+//            print("Val Accuracy: ",validationAccuracy)
+//            print("Eval Accuracy: ",evaluationAccuracy)
+//            
+//            testOutputLabel.text = String(validationAccuracy)
+//            
+//            let classifierMetadata = MLModelMetadata(author: "Rick Lattin",
+//                                                     shortDescription: "Predicts the whether the vowel ooo or aaa is said",
+//                                                     version: "1.0")
+//
+//            // Save the trained classifier model to the Desktop.
+//            let gradFileUrl = URL(fileURLWithPath: "/Users/ricklattin/Documents/SMU Year 5 Sem 1/Mobile Apps/Mobile Apps Lab 5/mobile_apps_ml_as_service/HTTPSwiftLab5/grad_models/grad_cur_audio_model.mlmodel")
+//            try classifier.write(to: gradFileUrl, metadata: classifierMetadata)
+//        } catch {
+//            print("Error loading data table: \(error)")
+//        }
+//    }
 
 }

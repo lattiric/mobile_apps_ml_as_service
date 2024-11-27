@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		581D82D22CF6A4A500DCC0A0 /* AudioTabularClassifier 1.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 581D82D12CF6A4A500DCC0A0 /* AudioTabularClassifier 1.mlmodel */; };
 		588C94042CF51C070060802F /* audio_table_data_test.csv in Resources */ = {isa = PBXBuildFile; fileRef = 588C94032CF51C070060802F /* audio_table_data_test.csv */; };
 		588C94332CF571A30060802F /* EntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588C94322CF571A30060802F /* EntryViewController.swift */; };
 		58C6415A2CF4594A00751EA8 /* GradViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C641592CF4594900751EA8 /* GradViewController.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		581D82D12CF6A4A500DCC0A0 /* AudioTabularClassifier 1.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = "AudioTabularClassifier 1.mlmodel"; sourceTree = "<group>"; };
 		588C94032CF51C070060802F /* audio_table_data_test.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = audio_table_data_test.csv; sourceTree = "<group>"; };
 		588C94322CF571A30060802F /* EntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewController.swift; sourceTree = "<group>"; };
 		58C641592CF4594900751EA8 /* GradViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradViewController.swift; sourceTree = "<group>"; };
@@ -67,6 +69,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		580ADB5E2CF5A17B009DED81 /* grad_models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = grad_models;
+			sourceTree = "<group>";
+		};
 		58D269122CF2C26C007DEA02 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -107,7 +116,9 @@
 			children = (
 				588C94032CF51C070060802F /* audio_table_data_test.csv */,
 				B67483DA1ACA2D6800A9970E /* AppDelegate.swift */,
+				581D82D12CF6A4A500DCC0A0 /* AudioTabularClassifier 1.mlmodel */,
 				B67483DC1ACA2D6800A9970E /* ViewController.swift */,
+				580ADB5E2CF5A17B009DED81 /* grad_models */,
 				588C94322CF571A30060802F /* EntryViewController.swift */,
 				58C641592CF4594900751EA8 /* GradViewController.swift */,
 				58D269042CF2C251007DEA02 /* AudioModel.swift */,
@@ -205,6 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				581D82D22CF6A4A500DCC0A0 /* AudioTabularClassifier 1.mlmodel in Sources */,
 				B67483DD1ACA2D6800A9970E /* ViewController.swift in Sources */,
 				58D269132CF2C26C007DEA02 /* AudioFileReader.m in Sources */,
 				58D269142CF2C26C007DEA02 /* MetalGraph.swift in Sources */,
@@ -356,7 +368,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7SS3BK2SRA;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SELECTED_FILES = "";
 				INFOPLIST_FILE = HTTPSwiftLab5/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This App requires microphone access.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -366,6 +383,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "SMU.--PRODUCT-NAME-rfc1034identifier--2-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "HTTPSwiftLab5/mobile_apps_audio_filtering_proj-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
@@ -375,7 +393,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7SS3BK2SRA;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SELECTED_FILES = "";
 				INFOPLIST_FILE = HTTPSwiftLab5/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This App requires microphone access.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -385,6 +408,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "SMU.--PRODUCT-NAME-rfc1034identifier--2-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "HTTPSwiftLab5/mobile_apps_audio_filtering_proj-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
