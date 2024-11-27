@@ -187,7 +187,7 @@ class GradViewController: UIViewController {
     func testModel(){
         do {
             let config = MLModelConfiguration()
-            let model = try AudioTabularClassifier_1(configuration: config)
+            let model = try AudioTabularClassifier_2(configuration: config)
             let prediction = try model.prediction(Peak: peak_value, Harmonic: harmonic_value)
             print(String(prediction.Vowel))
             self.predictionLabel.text = "Prediction Result: " + String(prediction.Vowel)
