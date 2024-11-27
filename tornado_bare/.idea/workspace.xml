@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5420336-2d84-4f15-bfab-9417cd9381b6" name="Changes" comment="">
+    <list default="true" id="c5420336-2d84-4f15-bfab-9417cd9381b6" name="Changes" comment="Added a random forest classifier">
       <change beforePath="$PROJECT_DIR$/../HTTPSwiftLab5.xcodeproj/project.xcworkspace/xcuserdata/alexpetmecky.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../HTTPSwiftLab5.xcodeproj/project.xcworkspace/xcuserdata/alexpetmecky.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fastapi_turicreate.py" beforeDir="false" afterPath="$PROJECT_DIR$/fastapi_turicreate.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,19 +36,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "alex",
-    "last_opened_file_path": "/Users/alexpetmecky/Desktop/lab_5_ma/mobile_apps_ml_as_service/tornado_bare",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;alex&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/alexpetmecky/Desktop/lab_5_ma/mobile_apps_ml_as_service/tornado_bare&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -69,11 +68,25 @@
       <workItem from="1732411256997" duration="191000" />
       <workItem from="1732411461235" duration="1859000" />
       <workItem from="1732490257816" duration="4060000" />
-      <workItem from="1732500018455" duration="3379000" />
+      <workItem from="1732500018455" duration="6691000" />
+      <workItem from="1732681767057" duration="331000" />
     </task>
+    <task id="LOCAL-00001" summary="Added a random forest classifier">
+      <option name="closed" value="true" />
+      <created>1732512693430</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1732512693430</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added a random forest classifier" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a random forest classifier" />
   </component>
 </project>
