@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c5420336-2d84-4f15-bfab-9417cd9381b6" name="Changes" comment="Added a random forest classifier">
       <change beforePath="$PROJECT_DIR$/../HTTPSwiftLab5.xcodeproj/project.xcworkspace/xcuserdata/alexpetmecky.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../HTTPSwiftLab5.xcodeproj/project.xcworkspace/xcuserdata/alexpetmecky.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HTTPSwiftLab5/GradViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../HTTPSwiftLab5/GradViewController.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HTTPSwiftLab5/MlaasModel.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../HTTPSwiftLab5/MlaasModel.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HTTPSwiftLab5/ViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../HTTPSwiftLab5/ViewController.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +72,7 @@
       <workItem from="1732411461235" duration="1859000" />
       <workItem from="1732490257816" duration="4060000" />
       <workItem from="1732500018455" duration="6691000" />
-      <workItem from="1732681767057" duration="331000" />
+      <workItem from="1732681767057" duration="2238000" />
     </task>
     <task id="LOCAL-00001" summary="Added a random forest classifier">
       <option name="closed" value="true" />

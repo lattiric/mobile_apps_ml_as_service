@@ -47,6 +47,10 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     //@IBOutlet weak var leftArrow: UILabel!
     @IBOutlet weak var largeMotionMagnitude: UIProgressView!
     
+    
+    @IBOutlet weak var ModelSwitch: UISwitch!
+    
+    
     @IBAction func getAllData(_ sender: Any) {
 //        client.getAllData()
         for number in peakList{
@@ -184,7 +188,14 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     }
     
     @IBAction func makeModel(_ sender: AnyObject) {
-        client.trainModel()
+        
+        if(ModelSwitch.isOn){
+            client.trainModel()
+        }else{
+            client.trainModel_second()
+        }
+        
+        
     }
 
 }
@@ -366,8 +377,14 @@ extension ViewController {
         
         // send data to server
         let dataToSend: [Double] = [peak_value, harmonic_value]
-        client.sendData(dataToSend, withLabel: label)
-        client.sendData_newModel(dataToSend, withLabel: label)
+        
+        if(ModelSwitch.isOn){
+            client.sendData(dataToSend, withLabel: label)
+        }else{
+            client.sendData_newModel(dataToSend, withLabel: label)
+        }
+        
+        
            
         if self.calibrationStage != .notCalibrating {  //ok fixed this, will calibrate oo once and aa once for each time u click "calibrate once"
                 nextCalibrationStage()
@@ -491,8 +508,14 @@ extension ViewController {
                 
                 // send data to server
                 let dataToSend: [Double] = [self.peak_value, self.harmonic_value]
-                self.client.sendData(dataToSend)
-                self.client.sendData(dataToSend)
+                
+                if(self.ModelSwitch.isOn){
+                    self.client.sendData(dataToSend)
+                }else{
+                    self.client.sendData(dataToSend)
+                }
+                
+                
             }
         }
     }

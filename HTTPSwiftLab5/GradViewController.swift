@@ -6,6 +6,7 @@
 //  Copyright © 2024 Eric Larson. All rights reserved.
 //
 
+/*
 import CreateML
 import CoreML
 import UIKit
@@ -246,3 +247,4 @@ class GradViewController: UIViewController {
 //    }
 
 }
+*/

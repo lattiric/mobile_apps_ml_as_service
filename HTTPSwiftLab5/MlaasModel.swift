@@ -30,7 +30,7 @@ class MlaasModel: NSObject, URLSessionDelegate{
     private let operationQueue = OperationQueue()
     // default ip, if you are unsure try: ifconfig |grep "inet "
     // to see what your public facing IP address is
-    var server_ip = "10.128.19.77" // this will be the default ip
+    var server_ip = "192.168.0.229" // this will be the default ip
     // create a delegate for using the protocol
     var delegate:ClientDelegate?
     private var dsid:Int = 2
@@ -150,6 +150,7 @@ class MlaasModel: NSObject, URLSessionDelegate{
                         print("Error Present: No model present in the given DSID")
                     } else{
                         let jsonDictionary = self.convertDataToDictionary(with: data)
+                        print(jsonDictionary)
                         delegate.receivedPrediction(jsonDictionary)
                     }
                 }
