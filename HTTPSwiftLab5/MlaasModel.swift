@@ -335,6 +335,61 @@ class MlaasModel: NSObject, URLSessionDelegate{
         
     }
     
+    // get all Data at a given DSID
+    func getAllData(){
+        let baseURL = "http://\(server_ip):8000/labeled_data/\(dsid)"
+        let getUrl = URL(string: "\(baseURL)")
+        
+        // create a custom HTTP GET request
+        var request = URLRequest(url: getUrl!)
+        
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let getTask : URLSessionDataTask = self.session.dataTask(with: request,
+                        completionHandler:{(data, response, error) in
+            // TODO: handle error!
+            let jsonDictionary = self.convertDataToDictionary(with: data)
+            print(response?.dictionaryWithValues(forKeys: ) ?? "test")
+            if let delegate = self.delegate,
+                let resp=response,
+                let dsid = jsonDictionary["dsid"] as? Int {
+                
+                print(resp)
+            }
+
+        })
+        
+        getTask.resume() // start the task
+        
+    }
+    
+//    func trainCoreMLModel(){
+//        let baseURL = "http://\(server_ip):8000/train_model_sklearn/\(dsid)"
+//        let postUrl = URL(string: "\(baseURL)")
+//        
+//        // create a custom HTTP POST request
+//        var request = URLRequest(url: postUrl!)
+//        
+//        request.httpMethod = "GET"
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//        
+//        let getTask : URLSessionDataTask = self.session.dataTask(with: request,
+//                        completionHandler:{(data, response, error) in
+//            // TODO: handle error!
+//            let jsonDictionary = self.convertDataToDictionary(with: data)
+//                            
+//            if let summary = jsonDictionary["summary"] as? String {
+//                // tell delegate to update interface for the Dsid
+//                print(summary)
+//            }
+//
+//        })
+//        
+//        getTask.resume() // start the task
+//        
+//    }
+    
     //MARK: Utility Functions
     private func matchIp(for regex:String, in text:String)->(Bool){
         do {

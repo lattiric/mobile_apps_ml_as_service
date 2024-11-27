@@ -130,7 +130,7 @@ class LabeledDataPoint(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     feature: List[float] = Field(...) # feature data as array
     label: str = Field(...) # label for this data
-    dsid: int = Field(..., le=50) # dataset id, for tracking different sets
+    dsid: int = Field(..., le=100) # dataset id, for tracking different sets
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,
@@ -163,7 +163,7 @@ class FeatureDataPoint(BaseModel):
     # but provided as `id` in the API requests and responses.
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     feature: List[float] = Field(...) # feature data as array
-    dsid: int = Field(..., le=50) # dataset id, for tracking different sets
+    dsid: int = Field(..., le=100) # dataset id, for tracking different sets
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,
