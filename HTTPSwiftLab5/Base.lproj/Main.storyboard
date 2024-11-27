@@ -97,12 +97,21 @@
                                 <color key="highlightedColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aHt-Wq-nWB">
-                                <rect key="frame" x="124" y="514" width="151" height="35"/>
+                                <rect key="frame" x="20" y="526" width="151" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Predict Audio"/>
                                 <connections>
                                     <action selector="togglePredictionListening:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="4VA-hi-WEX"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aT1-UA-2VY">
+                                <rect key="frame" x="258" y="526" width="115" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Get All Data"/>
+                                <connections>
+                                    <action selector="getAllData:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="tVd-0i-Lg6"/>
                                 </connections>
                             </button>
                         </subviews>
