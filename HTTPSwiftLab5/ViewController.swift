@@ -47,6 +47,20 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     //@IBOutlet weak var leftArrow: UILabel!
     @IBOutlet weak var largeMotionMagnitude: UIProgressView!
     
+    @IBAction func getAllData(_ sender: Any) {
+//        client.getAllData()
+        for number in peakList{
+            print(number)
+        }
+        print("-------------------------")
+        for number in harmonicList{
+            print(number)
+        }
+        for label in labelList{
+            print(label)
+        }
+    }
+    
     //Sound variables
     @IBOutlet weak var freq1: UILabel!
     @IBOutlet weak var freq2: UILabel!
@@ -70,6 +84,9 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     var peak_value: Double = 0.0
     var harmonic_value: Double = 0.0
     
+    var peakList: [Double] = []
+    var harmonicList: [Double] = []
+    var labelList: [String] = []
     
     //timer to run for like 3 seconds durikng calibration
     var calibrationTimer: Timer?
@@ -85,9 +102,6 @@ class ViewController: UIViewController, ClientDelegate, UITextFieldDelegate {
     lazy var graph: MetalGraph? = {
         return MetalGraph(userView: self.userView)
     }()
-    
-    
-    
     
     // MARK: Class Properties with Observers
     enum CalibrationStage:String {
@@ -345,6 +359,11 @@ extension ViewController {
         print("Peak 1: \(peak_value) Hz")
         print("Peak 2: \(harmonic_value) Hz")
             
+        //adding to total list
+        self.peakList.append(peak_value)
+        self.harmonicList.append(harmonic_value)
+        self.labelList.append(label)
+        
         // send data to server
         let dataToSend: [Double] = [peak_value, harmonic_value]
         client.sendData(dataToSend, withLabel: label)
@@ -460,7 +479,7 @@ extension ViewController {
                 }
             }
             print("Max Volume: ", vol_max)
-            if(vol_max > 0.16){
+            if(vol_max > 0.07){
                 self.calcTone(audio_data: self.audio.fftData)
                 self.calcVowel(audio_data: self.audio.fftData, peak_index: self.peak_1_index)
                 
